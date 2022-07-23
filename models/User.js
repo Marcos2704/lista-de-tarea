@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
     token:{
         type: String,
     },
-    confirmado:{
+    confirm:{
         type: Boolean,
         default: false,
     },
@@ -37,6 +37,10 @@ userSchema.pre("save", async function (next){
  const salt = await bcrypr.genSalt(10)
  this.password = await bcrypr.hash(this.password, salt)
 })
+
+userSchema.methods.comprobarPassword = async function(passwordForm){
+    return await bcrypr.compare(passwordForm, this.password)
+}
 
 
 const User = mongoose.model("User", userSchema)
