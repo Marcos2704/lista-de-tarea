@@ -48,8 +48,86 @@ const loginUser = async  (req, res)=>{
     }
 }
 
-const deleteUser = (req, res)=>{
-    res.send("eliminando  usuario")
+const confirmUser = async(req, res)=>{
+  const {token} = req.params
+  const confirm = await User.findOne({token})
+  if(!confirm){
+    const  error = new Error ("Token no valido")
+    return res.status(404),json({msg: error.message})
+  }
+  try {
+    confirm.confirm = true,
+    cofnrim.token = ""
+    await confirm.save()
+    res.json({msg: "Usuario confirmado correctamente"})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-export  {registerUser, loginUser, deleteUser}
+const olvidoPassword = async (req, res) =>{
+    const {email} = req.body
+    const user =  await User.findOne({email})
+    if(!user){
+        const error = new Error ("el usuario no existe")
+        return res.status(405).json({msg: error.message})
+    }
+    try {
+        user.token = genereteId()
+        await user.save()
+        res.json({msg:"Hemos enviado un email con las instrucciones"})
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+const comprobarToken = async (req, res) =>{
+    const {token} = req.params
+    const tokenValido =  await User.findOne({token}) 
+
+    if(!tokenValido){
+        const error = new Error ("el token no es valido")
+        return res.status(406).json({msg: error.message})
+    }
+    else{
+        res.json({msg:"Token valido"})
+    }
+}
+
+const newPassword = async (req, res) =>{
+    const {token} = req.params
+    const {password} = req.body
+
+    const user =  await User.findOne({token}) 
+
+    if(user){
+        user.password = password
+        user.token = ""
+        await user.save()
+        try {
+            res.json({msg:"Usuario modificado correctamente"})
+        } catch (error) {
+            console.log(error)
+        }
+
+    }else{
+        const error = new Error ("el token no es valido")
+        return res.status(406).json({msg: error.message})
+    }        
+}
+
+const perfil = async (req, res) =>{
+    console.log("Desde perfil")
+}
+
+
+export  {
+    registerUser, 
+    loginUser, 
+    confirmUser, 
+    olvidoPassword, 
+    comprobarToken, 
+    newPassword,
+    perfil
+}
