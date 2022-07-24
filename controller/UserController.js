@@ -13,11 +13,11 @@ const registerUser = async (req, res)=>{
     }
   
     try {
-        const usuario = new User(req.body)
-        usuario.token = genereteId()
-        const usuarioAlmacenado = await usuario.save()
-        res.json(usuarioAlmacenado)
-        console.log(usuario)
+        const user = new User(req.body)
+        user.token = genereteId()
+        const storedUser = await user.save()
+        res.json(storedUser)
+        console.log(user)
 
     } catch (error) {
         console.log(`error:${error.message}`)
@@ -53,11 +53,11 @@ const confirmUser = async(req, res)=>{
   const confirm = await User.findOne({token})
   if(!confirm){
     const  error = new Error ("Token no valido")
-    return res.status(404),json({msg: error.message})
+    return res.status(404).json({msg: error.message})
   }
   try {
     confirm.confirm = true,
-    cofnrim.token = ""
+    confirm.token = ""
     await confirm.save()
     res.json({msg: "Usuario confirmado correctamente"})
   } catch (error) {

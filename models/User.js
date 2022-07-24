@@ -38,6 +38,8 @@ userSchema.pre("save", async function (next){
  this.password = await bcrypr.hash(this.password, salt)
 })
 
+
+
 userSchema.methods.comprobarPassword = async function(passwordForm){
     return await bcrypr.compare(passwordForm, this.password)
 }
@@ -45,3 +47,5 @@ userSchema.methods.comprobarPassword = async function(passwordForm){
 
 const User = mongoose.model("User", userSchema)
 export default User;
+
+//"h1cvneq2le81g8o7k3bh"

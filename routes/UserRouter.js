@@ -1,4 +1,4 @@
-import express, { Router } from "express"
+import express from "express"
 import {registerUser, loginUser, confirmUser, olvidoPassword, comprobarToken, newPassword, perfil} from "../controller/UserController.js"
 import checkAuth from "../middleware/checkAuth.js"
 
